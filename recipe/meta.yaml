@@ -14,6 +14,8 @@ source:
 build:
   number: 2
   skip: true  # [py<35]
+  # Upstream code contains checks that will fail on non-x86 hardware
+  skip: true  # [not x86]
   script: {{ PYTHON }} -m pip install . --no-deps -vv
 
 requirements:
