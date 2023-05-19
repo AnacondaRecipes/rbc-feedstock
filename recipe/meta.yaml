@@ -1,5 +1,5 @@
 {% set name = "rbc" %}
-{% set version = "0.5.1" %}
+{% set version = "0.10.0" %}
 {% set pypi_name = "rbc-project" %}
 {% set bundle = "tar.gz" %}
 
@@ -8,37 +8,38 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ pypi_name[0] }}/{{ pypi_name }}/{{ pypi_name }}-{{ version }}.{{ bundle }}
-  sha256: f20984c120cf31dc31d9f5c6aef1f826cf5ca342569b21b008effd5394934a21
+  url: https://pypi.org/packages/source/{{ pypi_name[0] }}/{{ pypi_name }}/{{ pypi_name }}-{{ version[:4] }}.{{ bundle }}
+  sha256: e85a62191da5dcdf97eb0550f7556742b6376fbdcd8c01a510da1277d322553c
+  patches:
+    - 000_deprecated_typeDict.patch
 
 build:
-  number: 2
-  skip: true  # [py<35]
-  # Upstream code contains checks that will fail on non-x86 hardware
-  skip: true  # [not x86]
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  number: 0
+  skip: true  # [py<37 or s390x] 
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
-  build:
-    - python
   host:
     - python
     - setuptools
     - pip
+    - wheel
   run:
     - python
     - thriftpy2
     - tblib
-    - llvmlite >=0.29
-    - numba
+    - llvmlite
+    - numba >=0.55
     - netifaces
-    - six
+    - packaging
 
 test:
   requires:
     - pytest
+    - pip
   commands:
-    - pytest -sv -r s --pyargs rbc
+    - pip check
+    - pytest -sv -r s --pyargs rbc 
   imports:
     - rbc
     - rbc.thrift
