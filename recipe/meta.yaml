@@ -15,6 +15,7 @@ source:
 
 build:
   number: 0
+  # numba is not available on s390x
   skip: true  # [py<37 or s390x] 
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
