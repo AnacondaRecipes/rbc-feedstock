@@ -10,8 +10,6 @@ package:
 source:
   url: https://pypi.org/packages/source/{{ pypi_name[0] }}/{{ pypi_name }}/{{ pypi_name }}-{{ version[:4] }}.{{ bundle }}
   sha256: e85a62191da5dcdf97eb0550f7556742b6376fbdcd8c01a510da1277d322553c
-  patches:
-    - 000_deprecated_typeDict.patch
 
 build:
   number: 0
