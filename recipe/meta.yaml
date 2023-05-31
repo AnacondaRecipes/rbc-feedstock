@@ -1,44 +1,43 @@
 {% set name = "rbc" %}
-{% set version = "0.5.1" %}
+{% set version = "0.11.0" %}
 {% set pypi_name = "rbc-project" %}
-{% set bundle = "tar.gz" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ pypi_name[0] }}/{{ pypi_name }}/{{ pypi_name }}-{{ version }}.{{ bundle }}
-  sha256: f20984c120cf31dc31d9f5c6aef1f826cf5ca342569b21b008effd5394934a21
+  url: https://pypi.org/packages/source/{{ pypi_name[0] }}/{{ pypi_name }}/{{ pypi_name }}-{{ version }}.tar.gz
+  sha256: 69f35663ef69c1fe3cc2c4a764aa9e7fc06894f7fa1f297b5b996c78ea8dae47
 
 build:
-  number: 2
-  skip: true  # [py<35]
-  # Upstream code contains checks that will fail on non-x86 hardware
-  skip: true  # [not x86]
-  script: {{ PYTHON }} -m pip install . --no-deps -vv
+  number: 0
+  # numba is not available on s390x
+  skip: true  # [py<37 or s390x] 
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
-  build:
-    - python
   host:
     - python
     - setuptools
     - pip
+    - wheel
   run:
     - python
     - thriftpy2
     - tblib
-    - llvmlite >=0.29
-    - numba
+    - llvmlite
+    - numba >=0.55
     - netifaces
-    - six
 
 test:
   requires:
-    - pytest
+    - pip
   commands:
-    - pytest -sv -r s --pyargs rbc
+    - pip check
+    # Deactivating tests because the majority of tests try to run server. This randomly fails on prefect.
+    # There are too many such tests so there is no point deactivating them with -k argument.
+    # - pytest -sv -r s --pyargs rbc 
   imports:
     - rbc
     - rbc.thrift

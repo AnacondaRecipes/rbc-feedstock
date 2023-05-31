@@ -1,0 +1,12 @@
+diff --git a/rbc/typesystem.py b/rbc/typesystem.py
+index b95e5d7..3952054 100644
+--- a/rbc/typesystem.py
++++ b/rbc/typesystem.py
+@@ -249,7 +249,7 @@ for _k, _m, _lst in [
+
+ # numpy mapping
+ _numpy_imap = {}
+-for v in set(np.typeDict.values()):
++for v in set(np.sctypeDict.values()):
+     name = np.dtype(v).name
+     _numpy_imap[v] = name
